@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{38
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Services.CouponAPI", "Shop.Services.CouponAPI\Shop.Services.CouponAPI.csproj", "{7F2E0494-A539-4A2A-A098-43607A80EDE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Web", "Shop.Web\Shop.Web.csproj", "{D915DCA3-22CC-4207-84E7-A55EA17AFDF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.Web", "Shop.Web\Shop.Web.csproj", "{D915DCA3-22CC-4207-84E7-A55EA17AFDF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Services.AuthAPI", "Shop.Services.AuthAPI\Shop.Services.AuthAPI.csproj", "{58C8E16F-FA88-49A9-9D71-B604A1AA206E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{D915DCA3-22CC-4207-84E7-A55EA17AFDF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D915DCA3-22CC-4207-84E7-A55EA17AFDF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D915DCA3-22CC-4207-84E7-A55EA17AFDF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58C8E16F-FA88-49A9-9D71-B604A1AA206E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58C8E16F-FA88-49A9-9D71-B604A1AA206E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58C8E16F-FA88-49A9-9D71-B604A1AA206E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58C8E16F-FA88-49A9-9D71-B604A1AA206E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +42,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7F2E0494-A539-4A2A-A098-43607A80EDE2} = {38830DF5-61A1-4BC3-9C04-7253D0E09E64}
 		{D915DCA3-22CC-4207-84E7-A55EA17AFDF2} = {D2012C76-DD5E-4123-B83C-5CC8219FA069}
+		{58C8E16F-FA88-49A9-9D71-B604A1AA206E} = {38830DF5-61A1-4BC3-9C04-7253D0E09E64}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4012B673-4728-4139-8515-AB018BD9597B}
