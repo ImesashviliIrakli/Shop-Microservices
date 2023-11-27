@@ -55,7 +55,9 @@ namespace Shop.Services.AuthAPI.Service
                 return new LoginResponseDto() { User = null, Token = "" };
             }
 
-            var token = _jwt.GenerateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var token = _jwt.GenerateToken(user, roles);
 
             UserDto userDto = new()
             {

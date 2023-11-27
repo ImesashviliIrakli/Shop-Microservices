@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Shop.Web.Models;
 using Shop.Web.Service.IService;
@@ -47,7 +48,7 @@ namespace Shop.Web.Controllers
             }
             else
             {
-                ModelState.AddModelError("CustomError", login.Message);
+                TempData["error"] = login.Message;
                 return View(loginRequestDto);
             }
         }
@@ -88,6 +89,10 @@ namespace Shop.Web.Controllers
                     return RedirectToAction(nameof(Login));
                 }
             }
+            else
+            {
+                TempData["error"] = register.Message;
+            }
 
             var roleList = new List<SelectListItem>()
             {
@@ -121,6 +126,9 @@ namespace Shop.Web.Controllers
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, jwt.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, jwt.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name).Value));
             identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(x => x.Type == "role").Value));
+
+
 
             var principal = new ClaimsPrincipal(identity);
 
