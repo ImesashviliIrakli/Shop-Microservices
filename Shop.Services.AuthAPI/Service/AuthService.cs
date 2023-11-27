@@ -108,7 +108,7 @@ namespace Shop.Services.AuthAPI.Service
                 return result.Errors.FirstOrDefault().Description;
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "Error Encountered";
             }
