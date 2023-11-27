@@ -53,7 +53,7 @@ namespace Shop.Services.ProductAPI.Repositories
                 _context.SaveChanges();
             }
 
-            return product
+            return product;
         }
     }
 }
