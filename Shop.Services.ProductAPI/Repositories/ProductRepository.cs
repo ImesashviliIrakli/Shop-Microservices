@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shop.Services.ProductAPI.Data;
+﻿using Shop.Services.ProductAPI.Data;
 using Shop.Services.ProductAPI.Models;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace Shop.Services.ProductAPI.Repositories
 {
@@ -47,7 +45,7 @@ namespace Shop.Services.ProductAPI.Repositories
         {
             Product product = _context.Products.FirstOrDefault(x => x.ProductId == id);
 
-            if(product != null)
+            if (product != null)
             {
                 _context.Products.Remove(product);
                 _context.SaveChanges();
