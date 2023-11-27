@@ -9,6 +9,7 @@ namespace Shop.Services.ProductAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductAPIController : ControllerBase
     {
         private readonly IProductRepository _repo;
