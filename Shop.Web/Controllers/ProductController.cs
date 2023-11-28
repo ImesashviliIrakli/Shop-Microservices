@@ -30,7 +30,7 @@ namespace Shop.Web.Controllers
 				TempData["error"] = response.Message;
 			}
 
-			return View(products); ;
+			return View(products);
 		}
 
 		public async Task<IActionResult> ProductCreate(ProductDto productDto)

@@ -1,21 +1,59 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Shop.Web.Models;
+using Shop.Web.Service.IService;
 using System.Diagnostics;
 
 namespace Shop.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IProductService _productService;
+        public HomeController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<ProductDto> products = new();
+
+            ResponseDto response = await _productService.GetAllProductsAsync();
+
+            if (response != null && response.IsSuccess)
+            {
+                string resultString = Convert.ToString(response.Result);
+
+                products = JsonConvert.DeserializeObject<List<ProductDto>>(resultString);
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+            }
+
+            return View(products);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ProductDetails(int productId)
+        {
+            ProductDto products = new();
+
+            ResponseDto response = await _productService.GetProductByIdAsync(productId);
+
+            if (response != null && response.IsSuccess)
+            {
+                string resultString = Convert.ToString(response.Result);
+
+                products = JsonConvert.DeserializeObject<ProductDto>(resultString);
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+            }
+
+            return View(products);
         }
 
         public IActionResult Privacy()
