@@ -1,14 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shop.Services.CouponAPI;
 using Shop.Services.CouponAPI.Data;
 using Shop.Services.CouponAPI.Extensions;
 using Shop.Services.CouponAPI.Repositories;
-using System.ComponentModel;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
