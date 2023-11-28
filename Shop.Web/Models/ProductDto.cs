@@ -1,8 +1,11 @@
-﻿namespace Shop.Web.Models.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Shop.Web.Models
 {
     public class ProductDto
     {
         public int ProductId { get; set; }
+        [Required]
         public string Name { get; set; }
         public double Price { get; set; }
         public string Description { get; set; }
