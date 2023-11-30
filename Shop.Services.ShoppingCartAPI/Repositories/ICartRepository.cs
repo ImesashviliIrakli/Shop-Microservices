@@ -12,7 +12,7 @@ namespace Shop.Services.ShoppingCartAPI.Repositories
         public int GetCartItemCountByHeader(int cartHeaderId);
         public CartHeader AddCartHeader(CartHeader cartHeader);
         public Task<CartDetails> AddCartDetails(CartDetails cartDetails);
-        public Task<CartDetails> UpdateCartHeader(CartHeader cartHeader);
+        public Task<CartHeader> UpdateCartHeader(CartHeader cartHeader);
         public Task<CartDetails> UpdateCartDetails(CartDetails cartDetails);
         public Task<CartHeader> RemoveCartHeader(int cartHeaderId);
         public Task<CartDetails> RemoveCartDetails(CartDetails cartDetails);

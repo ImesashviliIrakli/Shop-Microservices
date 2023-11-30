@@ -4,15 +4,18 @@ using Newtonsoft.Json;
 using Shop.Web.Models;
 using Shop.Web.Service.IService;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Shop.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IProductService _productService;
-        public HomeController(IProductService productService)
+        private readonly ICartService _cartService;
+        public HomeController(IProductService productService, ICartService cartService)
         {
             _productService = productService;
+            _cartService = cartService;
         }
 
         public async Task<IActionResult> Index()
@@ -54,6 +57,42 @@ namespace Shop.Web.Controllers
             }
 
             return View(products);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ActionName("ProductDetails")]
+        public async Task<IActionResult> ProductDetails(ProductDto productDto)
+        {
+            string userId = User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value;
+
+            CartDto cartDto = new();
+
+            CartHeaderDto cartHeader = new() { UserId = userId };
+
+            CartDetailsDto cartDetails = new()
+            {
+                Count = productDto.Count,
+                ProductId = productDto.ProductId
+            };
+            List<CartDetailsDto> cartDetailsDtos = new() { cartDetails };
+
+            cartDto.CartHeader = cartHeader;
+            cartDto.CartDetails = cartDetailsDtos;
+
+            ResponseDto response = await _cartService.UpsertCartAsync(cartDto);
+
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Added to cart";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+            }
+
+            return View(productDto);
         }
 
         public IActionResult Privacy()

@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Models;
 using Shop.Services.ShoppingCartAPI.Models.Dto;
 using Shop.Services.ShoppingCartAPI.Repositories;
 using Shop.Services.ShoppingCartAPI.Service.IService;
-using System.Collections.Frozen;
 
 namespace Shop.Services.ShoppingCartAPI.Controllers
 {
@@ -37,7 +33,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
             _couponService = couponService;
         }
 
-        [HttpGet("GetCart/{userId:string}")]
+        [HttpGet("GetCart/{userId}")]
         public async Task<ResponseDto> GetCart(string userId)
         {
             try
@@ -65,9 +61,9 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
                 // Apply coupon logic
                 if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
                 {
-                    CouponDto coupon = await _couponService.GetCoupon(cart.CartHeader.CouponCode);       
-                
-                    if(coupon != null && cart.CartHeader.CartTotal > coupon.MinAmount)
+                    CouponDto coupon = await _couponService.GetCoupon(cart.CartHeader.CouponCode);
+
+                    if (coupon != null && cart.CartHeader.CartTotal > coupon.MinAmount)
                     {
                         cart.CartHeader.CartTotal -= coupon.DiscountAmount;
                         cart.CartHeader.Discount = coupon.DiscountAmount;
@@ -135,8 +131,8 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
             try
             {
                 var cartHeaderFromDb = await _cartRepository.GetCartHeaderByUserId(cartDto.CartHeader.UserId);
-                
-                if(cartHeaderFromDb == null)
+
+                if (cartHeaderFromDb == null)
                 {
                     CartHeader cartHeader = _mapper.Map<CartHeader>(cartDto.CartHeader);
                     _cartRepository.AddCartHeader(cartHeader);
@@ -154,7 +150,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
 
                     var cartDetailsFromDb = await _cartRepository.GetCartDetails(productId, cartHeaderId);
 
-                    if(cartDetailsFromDb == null)
+                    if (cartDetailsFromDb == null)
                     {
                         cartDto.CartDetails.First().CartHeaderId = cartHeaderId;
                         CartDetails cartDetails = _mapper.Map<CartDetails>(cartDto.CartDetails.First());
@@ -172,9 +168,9 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
                 }
 
                 _response.Result = cartDto;
-            
+
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;

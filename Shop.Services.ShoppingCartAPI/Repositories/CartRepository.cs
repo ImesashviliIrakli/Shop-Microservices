@@ -38,7 +38,7 @@ namespace Shop.Services.ShoppingCartAPI.Repositories
 
         public async Task<IEnumerable<CartDetails>> GetCartDetailsByHeader(int cartHeaderId)
         {
-            return _context.CartDetails.Where(x => x.CartHeaderId == cartHeaderId).ToList();
+            return await _context.CartDetails.Where(x => x.CartHeaderId == cartHeaderId).ToListAsync();
         }
 
         public int GetCartItemCountByHeader(int cartHeaderId)
@@ -90,7 +90,7 @@ namespace Shop.Services.ShoppingCartAPI.Repositories
             return cartDetails;
         }
 
-        public async Task<CartDetails> UpdateCartHeader(CartHeader cartHeader)
+        public async Task<CartHeader> UpdateCartHeader(CartHeader cartHeader)
         {
             _context.CartHeaders.Update(cartHeader);
             await _context.SaveChangesAsync();
