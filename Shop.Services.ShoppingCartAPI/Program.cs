@@ -5,6 +5,9 @@ using Microsoft.OpenApi.Models;
 using Shop.Services.ShoppingCartAPI;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Extensions;
+using Shop.Services.ShoppingCartAPI.Repositories;
+using Shop.Services.ShoppingCartAPI.Service;
+using Shop.Services.ShoppingCartAPI.Service.IService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,9 +22,14 @@ IMapper mapper = MappingConfig.RegisterMap().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient("Product", x => x.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(x =>
