@@ -90,5 +90,12 @@ namespace Shop.Services.ShoppingCartAPI.Repositories
             return cartDetails;
         }
 
+        public async Task<CartDetails> UpdateCartHeader(CartHeader cartHeader)
+        {
+            _context.CartHeaders.Update(cartHeader);
+            await _context.SaveChangesAsync();
+
+            return cartHeader;
+        }
     }
 }
