@@ -20,7 +20,7 @@ namespace Shop.Services.ShoppingCartAPI.Service
 
             var result = JsonConvert.DeserializeObject<ResponseDto>(apiContent);
 
-            if (result.IsSuccess)
+            if (result.Result != null && result.IsSuccess)
             {
                 string resultString = Convert.ToString(result.Result);
                 return JsonConvert.DeserializeObject<CouponDto>(resultString);
