@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shop.MessageBus;
-using Shop.Services.AuthAPI.Data;
-using Shop.Services.AuthAPI.Models;
-using Shop.Services.AuthAPI.Service;
-using Shop.Services.AuthAPI.Service.IService;
+using Shop.Services.EmailAPI.Data;
+using Shop.Services.EmailAPI.Extensions;
+using Shop.Services.EmailAPI.Messaging;
+using Shop.Services.EmailAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +13,11 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddSingleton(new EmailService(optionBuilder.Options));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-builder.Services.AddScoped<IMessageBus, MessageBus>();
+builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,13 +35,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
 
 ApplyMigration();
+
+app.UserAzureServiceBusConsumer();
 
 app.Run();
 
