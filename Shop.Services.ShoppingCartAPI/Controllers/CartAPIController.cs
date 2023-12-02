@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Shop.MessageBus;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Models;
 using Shop.Services.ShoppingCartAPI.Models.Dto;
@@ -17,13 +18,17 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         private readonly ICartRepository _cartRepository;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
         private ResponseDto _response;
         public CartAPIController(
             IMapper mapper,
             AppDbContext context,
             ICartRepository cartRepository,
             IProductService productService,
-            ICouponService couponService)
+            ICouponService couponService,
+            IConfiguration configuration,
+            IMessageBus messageBus)
         {
             _mapper = mapper;
             _context = context;
@@ -31,6 +36,8 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
             _productService = productService;
             _response = new();
             _couponService = couponService;
+            _configuration = configuration;
+            _messageBus = messageBus;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -91,6 +98,24 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
                 cartFromDb.CouponCode = cartDto.CartHeader.CouponCode;
 
                 await _cartRepository.UpdateCartHeader(cartFromDb);
+
+                _response.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
+        [HttpPost("EmailCartRequest")]
+        public async Task<ResponseDto> EmailCartRequest(CartDto cartDto)
+        {
+            try
+            {
+                await _messageBus.PublishMessage(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCart"));
 
                 _response.Result = true;
             }

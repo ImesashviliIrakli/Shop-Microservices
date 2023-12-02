@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Shop.MessageBus;
 using Shop.Services.ShoppingCartAPI;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Extensions;
@@ -27,6 +28,9 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
+
+builder.Services.AddScoped<IMessageBus, MessageBus>();
+
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
