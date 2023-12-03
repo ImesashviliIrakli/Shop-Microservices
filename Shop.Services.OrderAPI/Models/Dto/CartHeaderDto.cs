@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Shop.Web.Models
+namespace Shop.Services.OrderAPI.Models.Dto
 {
     public class CartHeaderDto
     {

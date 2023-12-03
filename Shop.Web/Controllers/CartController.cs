@@ -11,15 +11,47 @@ namespace Shop.Web.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
-        public CartController(ICartService cartService)
+        private readonly IOrderService _orderService;  
+        public CartController(ICartService cartService, IOrderService orderService)
         {
             _cartService = cartService;
+            _orderService = orderService;
         }
 
         public async Task<IActionResult> CartIndex()
         {
             CartDto cartDto = await LoadCartDtoBasedOnLoggedInUser();
             return View(cartDto);
+        }
+
+        public async Task<IActionResult> Checkout()
+        {
+            CartDto cartDto = await LoadCartDtoBasedOnLoggedInUser();
+            return View(cartDto);
+        }
+
+        [HttpPost]
+        [ActionName("Checkout")]
+        public async Task<IActionResult> Checkout(CartDto cartDto)
+        {
+            CartDto cart = await LoadCartDtoBasedOnLoggedInUser();
+            cart.CartHeader.FirstName = cartDto.CartHeader.FirstName;
+            cart.CartHeader.LastName = cartDto.CartHeader.LastName;
+            cart.CartHeader.Email = cartDto.CartHeader.Email;
+            cart.CartHeader.Phone = cartDto.CartHeader.Phone;
+
+            ResponseDto response = await _orderService.CreateOrder(cart);
+
+            string resultString = Convert.ToString(response.Result);
+            OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(resultString);
+
+            if(response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Order created successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+
+            return View();
         }
 
         public async Task<IActionResult> Remove(int cartDetailsId)
