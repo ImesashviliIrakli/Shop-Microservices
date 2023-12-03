@@ -47,11 +47,30 @@ namespace Shop.Web.Controllers
 
             if(response != null && response.IsSuccess)
             {
-                TempData["success"] = "Order created successfully";
-                return RedirectToAction(nameof(CartIndex));
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+                StripeRequestDto stripeRequestDto = new()
+                {
+                    ApprovedUrl = domain + "cart/Confirmation?orderId=" + orderHeaderDto.OrderHeaderId,
+                    CancelUrl = domain + "cart/Checkout",
+                    OrderHeader = orderHeaderDto
+                };
+
+                var stripeResponse = await _orderService.CreateStripeSession(stripeRequestDto);
+
+                string stripeResultString = Convert.ToString(stripeResponse.Result);
+                StripeRequestDto stripeResponseResult = JsonConvert.DeserializeObject<StripeRequestDto>(stripeResultString);
+
+                Response.Headers.Add("Location", value: stripeResponseResult.StripeSessionUrl);
+
+                return new StatusCodeResult(303);
             }
 
             return View();
+        }
+
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+            return View(orderId);
         }
 
         public async Task<IActionResult> Remove(int cartDetailsId)

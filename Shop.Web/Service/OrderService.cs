@@ -21,5 +21,15 @@ namespace Shop.Web.Service
                 Data = cartDto
             });
         }
+
+        public async Task<ResponseDto> CreateStripeSession(StripeRequestDto stripeRequestDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = ApiType.POST,
+                Url = SD.OrderAPIBase + $"/api/OrderAPI/CreateStripeSession",
+                Data = stripeRequestDto
+            });
+        }
     }
 }
