@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Shop.Web.Models;
 using Shop.Web.Service.IService;
 
 namespace Shop.Web.Controllers
 {
+    [Authorize]
     public class CouponController : Controller
     {
         private readonly ICouponService _couponService;

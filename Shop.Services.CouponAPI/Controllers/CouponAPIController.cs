@@ -99,6 +99,17 @@ namespace Shop.Services.CouponAPI.Controllers
 
                 Coupon addedCoupon = _repo.Add(coupon);
 
+                var options = new Stripe.CouponCreateOptions
+                {
+                    AmountOff = (long)(couponDto.DiscountAmount * 100),
+                    Name = couponDto.CouponCode,
+                    Currency = "usd",
+                    Id = couponDto.CouponCode
+                };
+
+                var service = new Stripe.CouponService();
+                service.Create(options);
+
                 _response.Result = _mapper.Map<CouponDto>(addedCoupon);
 
                 if (_response.Result == null)
@@ -151,6 +162,10 @@ namespace Shop.Services.CouponAPI.Controllers
             try
             {
                 Coupon deletedCoupon = _repo.Delete(id);
+
+                var service = new Stripe.CouponService();
+
+                service.Delete(deletedCoupon.CouponCode);
 
                 _response.Result = _mapper.Map<CouponDto>(deletedCoupon);
 

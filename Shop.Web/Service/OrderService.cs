@@ -12,6 +12,7 @@ namespace Shop.Web.Service
         {
             _baseService = baseService;
         }
+
         public async Task<ResponseDto> CreateOrder(CartDto cartDto)
         {
             return await _baseService.SendAsync(new RequestDto()
@@ -29,6 +30,16 @@ namespace Shop.Web.Service
                 ApiType = ApiType.POST,
                 Url = SD.OrderAPIBase + $"/api/OrderAPI/CreateStripeSession",
                 Data = stripeRequestDto
+            });
+        }
+
+        public async Task<ResponseDto> ValidateStripeSession(int orderHeaderId)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = ApiType.POST,
+                Url = SD.OrderAPIBase + $"/api/OrderAPI/ValidateStripeSession",
+                Data = orderHeaderId
             });
         }
     }

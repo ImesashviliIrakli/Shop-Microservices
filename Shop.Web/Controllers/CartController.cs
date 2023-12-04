@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Shop.Web.Models;
 using Shop.Web.Service.IService;
+using Shop.Web.Utility;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Shop.Web.Controllers
@@ -70,6 +71,21 @@ namespace Shop.Web.Controllers
 
         public async Task<IActionResult> Confirmation(int orderId)
         {
+            ResponseDto response = await _orderService.ValidateStripeSession(orderId);
+
+            if (response != null && response.IsSuccess)
+            {
+                string resultString = Convert.ToString(response.Result);
+                OrderHeaderDto orderHeader = JsonConvert.DeserializeObject<OrderHeaderDto>(resultString);
+
+                if(orderHeader.Status == SD.Status_Approved)
+                {
+                    return View(orderId);
+                }
+
+                TempData["success"] = "Cart updated successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
             return View(orderId);
         }
 
@@ -134,7 +150,7 @@ namespace Shop.Web.Controllers
 
             if (response != null && response.IsSuccess)
             {
-                TempData["success"] = "Coupon applied successfully";
+                TempData["success"] = "Coupon removed successfully";
                 return RedirectToAction(nameof(CartIndex));
             }
             else

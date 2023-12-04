@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Services.OrderAPI.Data;
 using Shop.Services.OrderAPI.Models;
 using Shop.Services.OrderAPI.Models.Dto;
 using Shop.Services.OrderAPI.Service.IService;
 using Shop.Services.OrderAPI.Utility;
-using Stripe.Checkout;
 using Stripe;
-using System.Security.AccessControl;
+using Stripe.Checkout;
 
 namespace Shop.Services.OrderAPI.Controllers
 {
@@ -67,9 +65,19 @@ namespace Shop.Services.OrderAPI.Controllers
                     CancelUrl = stripeRequestDto.CancelUrl,
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
+                    Discounts = new List<SessionDiscountOptions>()
                 };
 
-                foreach(var item in stripeRequestDto.OrderHeader.OrderDetails)
+
+                var discountsObj = new List<SessionDiscountOptions>()
+                {
+                    new SessionDiscountOptions
+                    {
+                        Coupon = stripeRequestDto.OrderHeader.CouponCode
+                    }
+                };
+
+                foreach (var item in stripeRequestDto.OrderHeader.OrderDetails)
                 {
                     var sessionLineItem = new SessionLineItemOptions
                     {
@@ -88,6 +96,11 @@ namespace Shop.Services.OrderAPI.Controllers
                     options.LineItems.Add(sessionLineItem);
                 }
 
+                if (stripeRequestDto.OrderHeader.Discount > 0)
+                {
+                    options.Discounts = discountsObj;
+                }
+
                 var service = new SessionService();
                 Session session = service.Create(options);
 
@@ -99,6 +112,37 @@ namespace Shop.Services.OrderAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 _response.Result = stripeRequestDto;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
+        [HttpPost("ValidateStripeSession")]
+        public async Task<ResponseDto> ValidateStripeSession([FromBody] int orderHeaderId)
+        {
+            try
+            {
+                OrderHeader orderHeader = _context.OrderHeaders.First(x => x.OrderHeaderId == orderHeaderId);
+
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.StripeSessionsId);
+
+                var paymentIntentService = new PaymentIntentService();
+
+                PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+
+                if(paymentIntent.Status == "succeeded")
+                {
+                    orderHeader.PaymentIntentId = paymentIntent.Id;
+                    orderHeader.Status = SD.Status_Approved;
+                    await _context.SaveChangesAsync();
+                }
+                
             }
             catch (Exception ex)
             {
