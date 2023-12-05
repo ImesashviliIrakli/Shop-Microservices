@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shop.MessageBus;
 using Shop.Services.AuthAPI.Models.Dto;
 using Shop.Services.AuthAPI.Service.IService;
@@ -48,7 +45,7 @@ namespace Shop.Services.AuthAPI.Controllers
         {
             var loginResponse = await _authService.Login(model);
 
-            if(loginResponse.User == null)
+            if (loginResponse.User == null)
             {
                 _response.IsSuccess = false;
                 _response.Message = "Username or password is incorrect";

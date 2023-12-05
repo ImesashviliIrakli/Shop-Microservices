@@ -186,8 +186,6 @@ namespace Shop.Web.Controllers
             }
 
             return new CartDto();
-
-
         }
     }
 }

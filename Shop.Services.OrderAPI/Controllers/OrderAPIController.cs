@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Services.OrderAPI.Data;
 using Shop.Services.OrderAPI.Models;
 using Shop.Services.OrderAPI.Models.Dto;
+using Shop.Services.OrderAPI.Repositories;
 using Shop.Services.OrderAPI.Service.IService;
 using Shop.Services.OrderAPI.Utility;
 using Stripe;
@@ -18,14 +18,12 @@ namespace Shop.Services.OrderAPI.Controllers
     {
         protected ResponseDto _response;
         private readonly IMapper _mapper;
-        private readonly AppDbContext _context;
-        private readonly IProductService _productService;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrderAPIController(IMapper mapper, AppDbContext context, IProductService productService)
+        public OrderAPIController(IMapper mapper, IProductService productService, IOrderRepository orderRepository)
         {
             _mapper = mapper;
-            _context = context;
-            _productService = productService;
+            _orderRepository = orderRepository;
             _response = new ResponseDto();
         }
 
@@ -35,14 +33,17 @@ namespace Shop.Services.OrderAPI.Controllers
             try
             {
                 OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(cartDto.CartHeader);
+
                 orderHeaderDto.OrderTime = DateTime.Now;
                 orderHeaderDto.Status = SD.Status_Pending;
                 orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetails);
 
-                OrderHeader orderCreated = _context.OrderHeaders.Add(_mapper.Map<OrderHeader>(orderHeaderDto)).Entity;
-                await _context.SaveChangesAsync();
+                OrderHeader orderHeader = _mapper.Map<OrderHeader>(orderHeaderDto);
+
+                OrderHeader orderCreated = await _orderRepository.AddOrderHeader(orderHeader);
 
                 orderHeaderDto.OrderHeaderId = orderCreated.OrderHeaderId;
+
                 _response.Result = orderHeaderDto;
             }
             catch (Exception ex)
@@ -59,6 +60,8 @@ namespace Shop.Services.OrderAPI.Controllers
         {
             try
             {
+                #region Stripe Configuration
+
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = stripeRequestDto.ApprovedUrl,
@@ -67,7 +70,6 @@ namespace Shop.Services.OrderAPI.Controllers
                     Mode = "payment",
                     Discounts = new List<SessionDiscountOptions>()
                 };
-
 
                 var discountsObj = new List<SessionDiscountOptions>()
                 {
@@ -106,10 +108,13 @@ namespace Shop.Services.OrderAPI.Controllers
 
                 stripeRequestDto.StripeSessionUrl = session.Url;
 
-                OrderHeader orderHeader = _context.OrderHeaders.First(x => x.OrderHeaderId == stripeRequestDto.OrderHeader.OrderHeaderId);
+                #endregion
+
+                OrderHeader orderHeader = await _orderRepository.GetOrderHeader(stripeRequestDto.OrderHeader.OrderHeaderId);
+
                 orderHeader.StripeSessionsId = session.Id;
 
-                await _context.SaveChangesAsync();
+                await _orderRepository.UpdateOrderHeader(orderHeader);
 
                 _response.Result = stripeRequestDto;
             }
@@ -127,7 +132,7 @@ namespace Shop.Services.OrderAPI.Controllers
         {
             try
             {
-                OrderHeader orderHeader = _context.OrderHeaders.First(x => x.OrderHeaderId == orderHeaderId);
+                OrderHeader orderHeader = await _orderRepository.GetOrderHeader(orderHeaderId);
 
                 var service = new SessionService();
                 Session session = service.Get(orderHeader.StripeSessionsId);
@@ -136,11 +141,12 @@ namespace Shop.Services.OrderAPI.Controllers
 
                 PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
 
-                if(paymentIntent.Status == "succeeded")
+                if (paymentIntent.Status == "succeeded")
                 {
                     orderHeader.PaymentIntentId = paymentIntent.Id;
                     orderHeader.Status = SD.Status_Approved;
-                    await _context.SaveChangesAsync();
+
+                    await _orderRepository.UpdateOrderHeader(orderHeader);
                 }
 
                 _response.Result = orderHeader;

@@ -43,7 +43,7 @@ namespace Shop.Web.Controllers
 
                 if (response != null && response.IsSuccess)
                 {
-                    TempData["success"] = "Coupon Create Successfully";
+                    TempData["success"] = "Coupon created successfully";
 
                     return RedirectToAction(nameof(CouponIndex));
                 }
@@ -85,7 +85,7 @@ namespace Shop.Web.Controllers
 
             if (response != null && response.IsSuccess)
             {
-                TempData["success"] = "Coupon Deleted Successfully";
+                TempData["success"] = "Coupon deleted successfully";
 
                 return RedirectToAction(nameof(CouponIndex));
             }

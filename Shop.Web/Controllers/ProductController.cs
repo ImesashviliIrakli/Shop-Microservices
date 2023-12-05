@@ -41,7 +41,7 @@ namespace Shop.Web.Controllers
 
 				if (response != null && response.IsSuccess)
 				{
-					TempData["success"] = "Product Created Successfully";
+					TempData["success"] = "Product created successfully";
 
 					return RedirectToAction(nameof(ProductIndex));
 				}
@@ -82,7 +82,7 @@ namespace Shop.Web.Controllers
 
 				if (response != null && response.IsSuccess)
 				{
-					TempData["success"] = "Product Updated Successfully";
+					TempData["success"] = "Product updated successfully";
 
 					return RedirectToAction(nameof(ProductIndex));
 				}
@@ -124,7 +124,7 @@ namespace Shop.Web.Controllers
 
 				if (response != null && response.IsSuccess)
 				{
-					TempData["success"] = "Product Deleted Successfully";
+					TempData["success"] = "product deleted successfully";
 
 					return RedirectToAction(nameof(ProductIndex));
 				}

@@ -2,24 +2,30 @@
 {
     public class SD
     {
+        // API Urls
         public static string CouponAPIBase { get; set; }
         public static string AuthAPIBase { get; set; }
         public static string ProductAPIBase { get; set; }
         public static string ShoppingCartAPIBase { get; set; }
         public static string OrderAPIBase { get; set; }
 
-        public const string RoleAdmin = "ADMIN";
-        public const string RoleCustomer = "Customer";
-        public const string TokenCookie = "JwtToken";
+        // API Types
         public enum ApiType
         {
             GET,
-            POST, 
+            POST,
             PUT,
             DELETE
         }
 
-        // Order Statuses
+        // Roles
+        public const string RoleAdmin = "ADMIN";
+        public const string RoleCustomer = "Customer";
+        
+        // JWT
+        public const string TokenCookie = "JwtToken";
+       
+        // Statuses
         public const string Status_Pending = "Pending";
         public const string Status_Approved = "Approved";
         public const string Status_ReadyForPickup = "ReadyForPickup";

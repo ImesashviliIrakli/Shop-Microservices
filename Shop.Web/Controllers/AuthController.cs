@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 using Shop.Web.Models;
 using Shop.Web.Service.IService;
@@ -82,9 +81,9 @@ namespace Shop.Web.Controllers
 
                 var assignRole = await _authService.AssignRoleAsync(registrationRequestDto);
 
-                if(assignRole != null && assignRole.IsSuccess)
+                if (assignRole != null && assignRole.IsSuccess)
                 {
-                    TempData["success"] = "Registration Successful";
+                    TempData["success"] = "Registration was successful";
 
                     return RedirectToAction(nameof(Login));
                 }

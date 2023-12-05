@@ -89,7 +89,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("ApplyCoupon")]
-        public async Task<ResponseDto> ApplyCoupon(CartDto cartDto)
+        public async Task<ResponseDto> ApplyCoupon([FromBody] CartDto cartDto)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("EmailCartRequest")]
-        public async Task<ResponseDto> EmailCartRequest(CartDto cartDto)
+        public async Task<ResponseDto> EmailCartRequest([FromBody] CartDto cartDto)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("RemoveCoupon")]
-        public async Task<ResponseDto> RemoveCoupon(CartDto cartDto)
+        public async Task<ResponseDto> RemoveCoupon([FromBody] CartDto cartDto)
         {
             try
             {
@@ -151,7 +151,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("CartUpsert")]
-        public async Task<ResponseDto> CartUpsert(CartDto cartDto)
+        public async Task<ResponseDto> CartUpsert([FromBody] CartDto cartDto)
         {
             try
             {

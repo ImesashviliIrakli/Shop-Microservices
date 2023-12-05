@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace Shop.Services.OrderAPI.Models.Dto
+﻿namespace Shop.Services.OrderAPI.Models.Dto
 {
     public class OrderDetailsDto
     {

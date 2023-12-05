@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shop.Services.CouponAPI.Models;
 using Shop.Services.CouponAPI.Models.Dto;
 using Shop.Services.CouponAPI.Repositories;
+using Shop.Services.CouponAPI.Utility;
 
 namespace Shop.Services.CouponAPI.Controllers
 {
@@ -90,7 +91,7 @@ namespace Shop.Services.CouponAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = SD.RoleAdmin)]
         public ResponseDto Post([FromBody] CouponDto couponDto)
         {
             try
@@ -115,7 +116,7 @@ namespace Shop.Services.CouponAPI.Controllers
                 if (_response.Result == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Could not add";
+                    _response.Message = "Could not add coupon";
                 }
             }
             catch (Exception ex)
@@ -128,7 +129,7 @@ namespace Shop.Services.CouponAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = SD.RoleAdmin)]
         public ResponseDto Put([FromBody] CouponDto couponDto)
         {
             try
@@ -142,7 +143,7 @@ namespace Shop.Services.CouponAPI.Controllers
                 if (_response.Result == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Could not add";
+                    _response.Message = "Could not update coupon";
                 }
             }
             catch (Exception ex)
@@ -156,7 +157,7 @@ namespace Shop.Services.CouponAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = SD.RoleAdmin)]
         public ResponseDto Delete(int id)
         {
             try
@@ -172,7 +173,7 @@ namespace Shop.Services.CouponAPI.Controllers
                 if (_response.Result == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Could not add";
+                    _response.Message = "Could not remove coupon";
                 }
             }
             catch (Exception ex)

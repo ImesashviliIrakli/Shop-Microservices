@@ -29,7 +29,7 @@ namespace Shop.Services.AuthAPI.Service
         {
             var user = _context.ApplicationUsers.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
 
-            if(user != null)
+            if (user != null)
             {
                 if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
                 {
@@ -78,7 +78,8 @@ namespace Shop.Services.AuthAPI.Service
 
         public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
         {
-            ApplicationUser user = new() {
+            ApplicationUser user = new()
+            {
                 UserName = registrationRequestDto.Email,
                 Email = registrationRequestDto.Email,
                 NormalizedEmail = registrationRequestDto.Email.ToUpper(),

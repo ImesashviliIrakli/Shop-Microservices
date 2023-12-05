@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
 using Shop.Services.EmailAPI.Data;
 using Shop.Services.EmailAPI.Models;
 using Shop.Services.EmailAPI.Models.Dto;
@@ -35,7 +34,7 @@ namespace Shop.Services.EmailAPI.Service
             message.Append("<br/>");
             message.Append("<ul>");
 
-            foreach(var item in cartDto.CartDetails)
+            foreach (var item in cartDto.CartDetails)
             {
                 message.Append("<li>");
                 message.Append(item.Product.Name + " x " + item.Count);
@@ -62,15 +61,15 @@ namespace Shop.Services.EmailAPI.Service
 
                 await _db.EmailLoggers.AddAsync(emailLog);
                 await _db.SaveChangesAsync();
-                
+
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
         }
 
-       
+
     }
 }

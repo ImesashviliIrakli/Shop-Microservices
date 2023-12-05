@@ -6,10 +6,10 @@ using Shop.MessageBus;
 using Shop.Services.OrderAPI;
 using Shop.Services.OrderAPI.Data;
 using Shop.Services.OrderAPI.Extensions;
+using Shop.Services.OrderAPI.Repositories;
 using Shop.Services.OrderAPI.Service;
 using Shop.Services.OrderAPI.Service.IService;
 using Shop.Services.OrderAPI.Utility;
-using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,15 +25,14 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
-builder.Services.AddScoped<IProductService, Shop.Services.OrderAPI.Service.ProductService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient("Product", x => x.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]))
     .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -76,7 +75,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 app.UseHttpsRedirection();
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Models;
-using Shop.Services.ShoppingCartAPI.Models.Dto;
 
 namespace Shop.Services.ShoppingCartAPI.Repositories
 {

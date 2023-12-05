@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shop.Services.ProductAPI.Models;
 using Shop.Services.ProductAPI.Models.Dto;
 using Shop.Services.ProductAPI.Repositories;
+using Shop.Services.ProductAPI.Utility;
 
 namespace Shop.Services.ProductAPI.Controllers
 {
@@ -89,7 +90,7 @@ namespace Shop.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = SD.RoleAdmin)]
         public ResponseDto Post([FromBody] ProductDto ProductDto)
         {
             try
@@ -103,7 +104,7 @@ namespace Shop.Services.ProductAPI.Controllers
                 if (_response.Result == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Could not add";
+                    _response.Message = "Could not add product";
                 }
             }
             catch (Exception ex)
@@ -116,7 +117,7 @@ namespace Shop.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = SD.RoleAdmin)]
         public ResponseDto Put([FromBody] ProductDto ProductDto)
         {
             try
@@ -130,7 +131,7 @@ namespace Shop.Services.ProductAPI.Controllers
                 if (_response.Result == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Could not add";
+                    _response.Message = "Could not update product";
                 }
             }
             catch (Exception ex)
@@ -144,7 +145,7 @@ namespace Shop.Services.ProductAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = SD.RoleAdmin)]
         public ResponseDto Delete(int id)
         {
             try
@@ -156,7 +157,7 @@ namespace Shop.Services.ProductAPI.Controllers
                 if (_response.Result == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Could not add";
+                    _response.Message = "Could not delete product";
                 }
             }
             catch (Exception ex)
