@@ -97,5 +97,17 @@ namespace Shop.Services.ShoppingCartAPI.Repositories
 
             return cartHeader;
         }
+
+        public async Task<CartHeader> RemoveEntireCart(CartHeader cartHeader)
+        {
+            List<CartDetails> cartDetails = await _context.CartDetails.Where(x => x.CartHeaderId == cartHeader.CartHeaderId).ToListAsync();
+
+            _context.CartDetails.RemoveRange(cartDetails);
+            _context.CartHeaders.Remove(cartHeader);
+
+            await _context.SaveChangesAsync();
+
+            return cartHeader;
+        }
     }
 }

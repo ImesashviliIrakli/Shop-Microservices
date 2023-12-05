@@ -71,6 +71,8 @@ namespace Shop.Web.Controllers
 
         public async Task<IActionResult> Confirmation(int orderId)
         {
+            string userId = User.Claims.Where(x => x.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault().Value;
+
             ResponseDto response = await _orderService.ValidateStripeSession(orderId);
 
             if (response != null && response.IsSuccess)
@@ -80,6 +82,14 @@ namespace Shop.Web.Controllers
 
                 if(orderHeader.Status == SD.Status_Approved)
                 {
+                    // Delete the cart
+                    ResponseDto cartResponse = await _cartService.GetCartByUserIdAsync(userId);
+
+                    string cartResultString = Convert.ToString(cartResponse.Result);
+                    CartDto cartDto = JsonConvert.DeserializeObject<CartDto>(cartResultString);
+
+                    await _cartService.RemoveEntireCartAsync(cartDto.CartHeader.CartHeaderId);
+
                     return View(orderId);
                 }
 

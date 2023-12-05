@@ -231,5 +231,25 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
+        [HttpPost("RemoveEntireCart")]
+        public async Task<ResponseDto> RemoveEntireCart([FromBody] int cartHeaderId)
+        {
+            try
+            {
+                CartHeader cartHeader = await _cartRepository.GetCartHeaderById(cartHeaderId);
+
+                await _cartRepository.RemoveEntireCart(cartHeader);
+
+                _response.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Shop.Services.ShoppingCartAPI.Models;
+using Shop.Services.ShoppingCartAPI.Models.Dto;
 
 namespace Shop.Services.ShoppingCartAPI.Repositories
 {
@@ -16,5 +17,6 @@ namespace Shop.Services.ShoppingCartAPI.Repositories
         public Task<CartDetails> UpdateCartDetails(CartDetails cartDetails);
         public Task<CartHeader> RemoveCartHeader(int cartHeaderId);
         public Task<CartDetails> RemoveCartDetails(CartDetails cartDetails);
+        public Task<CartHeader> RemoveEntireCart(CartHeader cartHeader);  
     }
 }

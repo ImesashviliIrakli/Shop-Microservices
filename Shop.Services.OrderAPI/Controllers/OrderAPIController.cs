@@ -142,7 +142,8 @@ namespace Shop.Services.OrderAPI.Controllers
                     orderHeader.Status = SD.Status_Approved;
                     await _context.SaveChangesAsync();
                 }
-                
+
+                _response.Result = orderHeader;
             }
             catch (Exception ex)
             {

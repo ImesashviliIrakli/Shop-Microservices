@@ -42,6 +42,16 @@ namespace Shop.Web.Service
             });
         }
 
+        public async Task<ResponseDto> RemoveEntireCartAsync(int cartHeaderId)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.POST,
+                Data = cartHeaderId,
+                Url = SD.ShoppingCartAPIBase + "/api/CartAPI/RemoveEntireCart"
+            });
+        }
+
         public async Task<ResponseDto> RemoveFromCartAsync(int cartDetailsId)
         {
             return await _baseService.SendAsync(new RequestDto()
