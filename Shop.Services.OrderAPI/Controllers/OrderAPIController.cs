@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shop.MessageBus;
 using Shop.Services.OrderAPI.Models;
 using Shop.Services.OrderAPI.Models.Dto;
 using Shop.Services.OrderAPI.Repositories;
@@ -19,11 +20,21 @@ namespace Shop.Services.OrderAPI.Controllers
         protected ResponseDto _response;
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
+        private readonly IMessageBus _messageBus;
+        private IConfiguration _configuration;
 
-        public OrderAPIController(IMapper mapper, IProductService productService, IOrderRepository orderRepository)
+        public OrderAPIController(
+            IMapper mapper,
+            IProductService productService,
+            IOrderRepository orderRepository, 
+            IMessageBus messageBus,
+            IConfiguration configuration
+            )
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
+            _messageBus = messageBus;
+            _configuration = configuration;
             _response = new ResponseDto();
         }
 
@@ -145,6 +156,17 @@ namespace Shop.Services.OrderAPI.Controllers
                 {
                     orderHeader.PaymentIntentId = paymentIntent.Id;
                     orderHeader.Status = SD.Status_Approved;
+
+                    RewardsDto rewardsDto = new()
+                    {
+                        OrderId = orderHeader.OrderHeaderId,
+                        RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal),
+                        UserId = orderHeader.UserId
+                    };
+
+                    string topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
+
+                    await _messageBus.PublishMessage(rewardsDto, topicName);
 
                     await _orderRepository.UpdateOrderHeader(orderHeader);
                 }

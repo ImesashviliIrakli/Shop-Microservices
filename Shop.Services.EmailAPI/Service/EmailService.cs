@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shop.Service.EmailAPI.Message;
 using Shop.Services.EmailAPI.Data;
 using Shop.Services.EmailAPI.Models;
 using Shop.Services.EmailAPI.Models.Dto;
@@ -46,6 +47,15 @@ namespace Shop.Services.EmailAPI.Service
             await LogAndEmail(message.ToString(), cartDto.CartHeader.Email);
         }
 
+        public async Task LogOrderPlaced(RewardsMessage rewardsMessage)
+        {
+            StringBuilder message = new StringBuilder();
+
+            message.AppendLine("New order placed: " + rewardsMessage.OrderId);
+
+            await LogAndEmail(message.ToString(), "test@gmail.com");
+        }
+
         private async Task<bool> LogAndEmail(string message, string email)
         {
             try
@@ -69,7 +79,5 @@ namespace Shop.Services.EmailAPI.Service
                 return false;
             }
         }
-
-
     }
 }
