@@ -41,5 +41,21 @@ namespace Shop.Services.OrderAPI.Repositories
 
             return orderDetails;
         }
+
+        public OrderHeader GetOrderHeaderWithDetails(int orderHeaderId)
+        {
+            return _context.OrderHeaders.Include(x => x.OrderDetails).First(x => x.OrderHeaderId == orderHeaderId);                       
+        }
+
+        public List<OrderHeader> GetAllOrdersForUser(string userId)
+        {
+            return _context.OrderHeaders.Include(x => x.OrderDetails).Where(x => x.UserId.Equals(userId)).ToList();
+
+        }
+
+        public List<OrderHeader> GetAllOrders()
+        {
+            return _context.OrderHeaders.Include(x => x.OrderDetails).OrderByDescending(x => x.OrderHeaderId).ToList();
+        }
     }
 }

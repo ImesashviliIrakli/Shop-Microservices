@@ -9,6 +9,7 @@ using Shop.Services.OrderAPI.Service.IService;
 using Shop.Services.OrderAPI.Utility;
 using Stripe;
 using Stripe.Checkout;
+using System.Formats.Asn1;
 
 namespace Shop.Services.OrderAPI.Controllers
 {
@@ -36,6 +37,50 @@ namespace Shop.Services.OrderAPI.Controllers
             _messageBus = messageBus;
             _configuration = configuration;
             _response = new ResponseDto();
+        }
+
+        [HttpGet("GetOrders")]
+        public ResponseDto Get(string userId = "")
+        {
+            try
+            {
+                IEnumerable<OrderHeader> objList;
+                if (User.IsInRole(SD.RoleAdmin))
+                {
+                    objList = _orderRepository.GetAllOrders();
+                }
+                else
+                {
+                    objList = _orderRepository.GetAllOrdersForUser(userId);
+                }
+
+                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDto>>(objList);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
+        [HttpGet("GetOrders/{id:int}")]
+        public ResponseDto Get(int id)
+        {
+            try
+            {
+                OrderHeader orderHeader = _orderRepository.GetOrderHeaderWithDetails(id);
+
+                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
         }
 
         [HttpPost("CreateOrder")]
@@ -172,6 +217,40 @@ namespace Shop.Services.OrderAPI.Controllers
                 }
 
                 _response.Result = orderHeader;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
+            return _response;
+        }
+
+        [HttpPost("UpdateOrderStatus/{orderId:int}")]
+        public async Task<ResponseDto> UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+        {
+            try
+            {
+                OrderHeader orderHeader = await _orderRepository.GetOrderHeader(orderId);
+
+                if(orderHeader != null)
+                {
+                    if(newStatus == SD.Status_Cancelled)
+                    {
+                        var options = new RefundCreateOptions
+                        {
+                            Reason = RefundReasons.RequestedByCustomer,
+                            PaymentIntent = orderHeader.PaymentIntentId
+                        };
+
+                        var service = new RefundService();
+
+                        Refund refund = service.Create(options);
+
+                        orderHeader.Status = newStatus;
+                    }
+                }
             }
             catch (Exception ex)
             {
