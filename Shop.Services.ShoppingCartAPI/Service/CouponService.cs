@@ -26,7 +26,7 @@ namespace Shop.Services.ShoppingCartAPI.Service
                 return JsonConvert.DeserializeObject<CouponDto>(resultString);
             }
 
-            return new CouponDto();
+            return null;
         }
     }
 }

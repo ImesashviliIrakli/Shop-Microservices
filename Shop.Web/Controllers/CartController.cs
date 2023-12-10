@@ -120,14 +120,13 @@ namespace Shop.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Coupon applied successfully";
-                return RedirectToAction(nameof(CartIndex));
             }
             else
             {
                 TempData["error"] = response.Message;
             }
 
-            return View();
+            return RedirectToAction(nameof(CartIndex));
         }
 
         [HttpPost]
@@ -161,14 +160,13 @@ namespace Shop.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Coupon removed successfully";
-                return RedirectToAction(nameof(CartIndex));
             }
             else
             {
                 TempData["error"] = response.Message;
             }
 
-            return View();
+            return RedirectToAction(nameof(CartIndex));
         }
 
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser() 

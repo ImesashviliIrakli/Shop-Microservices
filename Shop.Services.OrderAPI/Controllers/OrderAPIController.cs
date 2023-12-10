@@ -93,6 +93,7 @@ namespace Shop.Services.OrderAPI.Controllers
                 orderHeaderDto.OrderTime = DateTime.Now;
                 orderHeaderDto.Status = SD.Status_Pending;
                 orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetails);
+                orderHeaderDto.OrderTotal = Math.Round(orderHeaderDto.OrderTotal, 2);
 
                 OrderHeader orderHeader = _mapper.Map<OrderHeader>(orderHeaderDto);
 
@@ -123,8 +124,7 @@ namespace Shop.Services.OrderAPI.Controllers
                     SuccessUrl = stripeRequestDto.ApprovedUrl,
                     CancelUrl = stripeRequestDto.CancelUrl,
                     LineItems = new List<SessionLineItemOptions>(),
-                    Mode = "payment",
-                    Discounts = new List<SessionDiscountOptions>()
+                    Mode = "payment"
                 };
 
                 var discountsObj = new List<SessionDiscountOptions>()

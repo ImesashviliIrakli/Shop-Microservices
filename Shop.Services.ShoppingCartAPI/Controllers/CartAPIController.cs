@@ -95,11 +95,22 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
             {
                 var cartFromDb = await _cartRepository.GetCartHeaderByUserId(cartDto.CartHeader.UserId);
 
-                cartFromDb.CouponCode = cartDto.CartHeader.CouponCode;
+                var checkCoupon = await _couponService.GetCoupon(cartDto.CartHeader.CouponCode);
 
-                await _cartRepository.UpdateCartHeader(cartFromDb);
+                if (checkCoupon == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Result = true;
+                    _response.Message = "Could not find coupon";
+                }
+                else
+                {
+                    cartFromDb.CouponCode = cartDto.CartHeader.CouponCode;
 
-                _response.Result = true;
+                    await _cartRepository.UpdateCartHeader(cartFromDb);
+
+                    _response.Result = true;
+                }
             }
             catch (Exception ex)
             {
