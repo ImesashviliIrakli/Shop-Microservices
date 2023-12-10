@@ -39,7 +39,7 @@ namespace Shop.Services.OrderAPI.Controllers
             _response = new ResponseDto();
         }
 
-        [HttpGet("GetOrders")]
+        [HttpGet("GetOrders/{userId}")]
         public ResponseDto Get(string userId = "")
         {
             try
@@ -65,7 +65,7 @@ namespace Shop.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [HttpGet("GetOrders/{id:int}")]
+        [HttpGet("GetOrder/{id:int}")]
         public ResponseDto Get(int id)
         {
             try
@@ -247,10 +247,14 @@ namespace Shop.Services.OrderAPI.Controllers
                         var service = new RefundService();
 
                         Refund refund = service.Create(options);
-
-                        orderHeader.Status = newStatus;
                     }
+
+                    orderHeader.Status = newStatus;
+
+                    await _orderRepository.UpdateOrderHeader(orderHeader);
                 }
+
+                _response.Result = true;
             }
             catch (Exception ex)
             {
