@@ -6,6 +6,7 @@ using Shop.MessageBus;
 using Shop.Services.ShoppingCartAPI;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Extensions;
+using Shop.Services.ShoppingCartAPI.RabbitMQSender;
 using Shop.Services.ShoppingCartAPI.Repositories;
 using Shop.Services.ShoppingCartAPI.Service;
 using Shop.Services.ShoppingCartAPI.Service.IService;
@@ -29,7 +30,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
 
-builder.Services.AddScoped<IMessageBus, MessageBus>();
+builder.Services.AddScoped<IRabbitMQCartessageSender, RabbitMQCartMessageSender>();
 
 
 builder.Services.AddHttpContextAccessor();

@@ -6,6 +6,7 @@ using Shop.MessageBus;
 using Shop.Services.OrderAPI;
 using Shop.Services.OrderAPI.Data;
 using Shop.Services.OrderAPI.Extensions;
+using Shop.Services.OrderAPI.RabbitMQSender;
 using Shop.Services.OrderAPI.Repositories;
 using Shop.Services.OrderAPI.Service;
 using Shop.Services.OrderAPI.Service.IService;
@@ -27,7 +28,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IMessageBus, MessageBus>();
+builder.Services.AddScoped<IRabbitMQOrderMessageSender, RabbitMQOrderMessageSender>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();

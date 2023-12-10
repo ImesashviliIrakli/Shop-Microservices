@@ -4,6 +4,7 @@ using Shop.MessageBus;
 using Shop.Services.ShoppingCartAPI.Data;
 using Shop.Services.ShoppingCartAPI.Models;
 using Shop.Services.ShoppingCartAPI.Models.Dto;
+using Shop.Services.ShoppingCartAPI.RabbitMQSender;
 using Shop.Services.ShoppingCartAPI.Repositories;
 using Shop.Services.ShoppingCartAPI.Service.IService;
 
@@ -18,7 +19,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         private readonly ICartRepository _cartRepository;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
-        private readonly IMessageBus _messageBus;
+        private readonly IRabbitMQCartessageSender _messageBus;
         private readonly IConfiguration _configuration;
         private ResponseDto _response;
         public CartAPIController(
@@ -28,7 +29,7 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
             IProductService productService,
             ICouponService couponService,
             IConfiguration configuration,
-            IMessageBus messageBus)
+            IRabbitMQCartessageSender messageBus)
         {
             _mapper = mapper;
             _context = context;
@@ -122,11 +123,11 @@ namespace Shop.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("EmailCartRequest")]
-        public async Task<ResponseDto> EmailCartRequest([FromBody] CartDto cartDto)
+        public ResponseDto EmailCartRequest([FromBody] CartDto cartDto)
         {
             try
             {
-                await _messageBus.PublishMessage(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
+                _messageBus.SendMessage(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
 
                 _response.Result = true;
             }

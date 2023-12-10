@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shop.MessageBus;
 using Shop.Services.OrderAPI.Models;
 using Shop.Services.OrderAPI.Models.Dto;
+using Shop.Services.OrderAPI.RabbitMQSender;
 using Shop.Services.OrderAPI.Repositories;
 using Shop.Services.OrderAPI.Service.IService;
 using Shop.Services.OrderAPI.Utility;
@@ -21,14 +22,14 @@ namespace Shop.Services.OrderAPI.Controllers
         protected ResponseDto _response;
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
-        private readonly IMessageBus _messageBus;
+        private readonly IRabbitMQOrderMessageSender _messageBus;
         private IConfiguration _configuration;
 
         public OrderAPIController(
             IMapper mapper,
             IProductService productService,
-            IOrderRepository orderRepository, 
-            IMessageBus messageBus,
+            IOrderRepository orderRepository,
+            IRabbitMQOrderMessageSender messageBus,
             IConfiguration configuration
             )
         {
@@ -211,7 +212,7 @@ namespace Shop.Services.OrderAPI.Controllers
 
                     string topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
 
-                    await _messageBus.PublishMessage(rewardsDto, topicName);
+                    _messageBus.SendMessage(rewardsDto, topicName);
 
                     await _orderRepository.UpdateOrderHeader(orderHeader);
                 }

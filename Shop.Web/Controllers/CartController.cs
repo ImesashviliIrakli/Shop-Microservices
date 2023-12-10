@@ -140,14 +140,13 @@ namespace Shop.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Email will be processed and sent shortly";
-                return RedirectToAction(nameof(CartIndex));
             }
             else
             {
                 TempData["error"] = response.Message;
             }
 
-            return View();
+            return RedirectToAction(nameof(CartIndex));
         }
 
         [HttpPost]

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Shop.MessageBus;
 using Shop.Services.AuthAPI.Data;
 using Shop.Services.AuthAPI.Models;
+using Shop.Services.AuthAPI.RabbitMQSender;
 using Shop.Services.AuthAPI.Service;
 using Shop.Services.AuthAPI.Service.IService;
 
@@ -23,7 +24,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-builder.Services.AddScoped<IMessageBus, MessageBus>();
+builder.Services.AddScoped<IRabbitMQAuthMessageSender, RabbitMQAuthMessageSender>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
