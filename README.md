@@ -1,20 +1,30 @@
+# Online Shopping Microservices Application
 
-I have developed an online shopping application employing a microservices architecture.
+Welcome to the Online Shopping Microservices Application, a .NET-based project employing a robust microservices architecture. This application serves as an excellent sandbox for testing and learning containerized application orchestration and monitoring techniques.
 
-The implementation consists of precisely seven Web APIs, facilitating the creation of essential services.
+# Project Overview
 
-Additionally, an MVC Web Application serves as the frontend interface, complemented by a Gateway project utilizing Ocelot for seamless integration.
+The solution is crafted using .NET 8 and consists of the following components:
 
-Furthermore, a class library has been configured for Azure Service Bus, ensuring efficient communication and orchestration within the system.
+Seven Web APIs: These APIs are strategically designed to facilitate the creation of essential services for a comprehensive online shopping experience.
 
-All of the projects that I created use .NET 8.
+MVC Web Application: Serving as the frontend interface, this application provides a user-friendly interaction point for customers. The integration of Ocelot in the Gateway project ensures seamless communication and integration across the system.
 
-The project has 2 branches:
+Azure Service Bus Integration: A class library has been configured to use Azure Service Bus for efficient communication and orchestration within the microservices ecosystem.
 
-Master branch: This branch utilizes Azure Service Bus, where I have meticulously configured a range of queues, topics, and descriptions to facilitate seamless communication and messaging within the application.
+## Branches
+### Master Branch
+The Master branch utilizes Azure Service Bus, with meticulously configured queues, topics, and descriptions to ensure smooth communication and messaging within the application.
 
-RabbitMQ branch: In this branch, RabbitMQ takes precedence as the messaging middleware. Here, I have integrated RabbitMQ to replace Azure Service Bus, ensuring a robust and flexible messaging infrastructure tailored to the specific requirements of the project.
+### RabbitMQ Branch
+The RabbitMQ branch replaces Azure Service Bus with RabbitMQ as the messaging middleware. This integration provides a robust and flexible messaging infrastructure tailored to the specific project requirements.
 
-This is what the solution explorer looks like.
-
+## How the Solution Explorer looks:
 ![image](https://github.com/ImesashviliIrakli/Shop-Microservices/assets/77686006/42a5f557-b623-4026-95eb-d9866b17cea7)
+
+## Getting Started
+
+### To download and run the project:
+
+Clone the repository.
+Navigate to each project in the solution and run the `update-database` command to ensure database setup for each component.
