@@ -2,6 +2,8 @@
 
 Welcome to the Online Shopping Microservices Application, a .NET-based project employing a robust microservices architecture. This application serves as an excellent sandbox for testing and learning containerized application orchestration and monitoring techniques.
 
+![ECOM](https://github.com/ImesashviliIrakli/Shop-Microservices/assets/77686006/a491e9af-0e81-46b6-bfd7-3431fb6562c2)
+
 # Project Overview
 
 The solution is crafted using .NET 8 and consists of the following components:
